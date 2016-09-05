@@ -201,6 +201,23 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         
         return nil
     }
+
+    // Toggle Flash
+    public func toggleFlash() {
+        if let device = videoInput?.device {
+            if device.hasTorch {
+                if let _ = try? device.lockForConfiguration() {
+                    if device.torchMode == .On {
+                        device.torchMode = .Off
+                    } else {
+                        let _ = try? device.setTorchModeOnWithLevel(1.0)
+                    }
+                    
+                    device.unlockForConfiguration()
+                }
+            }
+        }
+    }
     
     func setupLayers(view: UIView) {
         drawLayer.frame = view.bounds

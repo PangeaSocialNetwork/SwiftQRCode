@@ -154,6 +154,8 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
             return
         }
         session.startRunning()
+
+        clearDrawLayer()
     }
     
     /// stop scan

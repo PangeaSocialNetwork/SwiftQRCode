@@ -165,6 +165,40 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         }
         session.stopRunning()
     }
+
+    // Switch camera to use
+    public func switchCamera() {
+        var device: AVCaptureDevice?
+        
+        if videoInput?.device.position == .Front {
+            device = self.getVideoDevice(.Back)
+        } else {
+            device = self.getVideoDevice(.Front)
+        }
+        
+        if let newVideoInput = try? AVCaptureDeviceInput(device: device) {
+            session.beginConfiguration()
+            
+            session.removeInput(videoInput)
+            videoInput = newVideoInput
+            session.addInput(videoInput)
+            
+            session.commitConfiguration()
+        }
+    }
+    
+    func getVideoDevice(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
+        let devices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
+        
+        for device in devices {
+            let device = device as! AVCaptureDevice
+            if device.position == position {
+                return device
+            }
+        }
+        
+        return nil
+    }
     
     func setupLayers(view: UIView) {
         drawLayer.frame = view.bounds
